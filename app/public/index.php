@@ -1,16 +1,22 @@
+<!HTML DOCTYPE>
 <html lang="en">
+    <body>
+    <h1>Assignment Get Parameters From Form</h1>
     <form action="index.php" method="post">
         <label for="firstname">Name: </label><br>
-        <input type="text" id="firstname" name="firstname" value="John"><br>
+        <input type="text" id="firstname" name="firstname" value="Rodrigo"><br>
         <label for="birthdate">Birthdate: </label><br>
-        <input type="date" id="birthdate" name="birthdate" value="2000-01-01"><br>
+        <input type="date" id="birthdate" name="birthdate" value="1999-01-19"><br>
         <input type="submit" value="Submit" name="SubmitButton">
     </form>
+</body>
 </html>
 
 <?php
     $name = null;
     $birthdate = null;
+    $age = null;
+
     if (isset($_POST['SubmitButton'])) {
         if ($_POST['firstname'] !== null) {
             $name = $_POST['firstname'];
@@ -20,13 +26,17 @@
             try {
                 $birthdate = strtotime($_POST['birthdate']);
                 $birthdate = date('Y-m-d', $birthdate);
+                $age = date_diff(date_create($birthdate), date_create(date('Y-m-d')));
+                $age = $age->format('%y');
             }
             catch (Exception $e) {
                 return null;
             }
         }
-        echo "<p> Assignment Get Parameters From Form </p>";
-        echo "<p>Name: $name $birthdate</p>";
+
+        // Display information
+        echo "<p>Name: $name Birthdate: $birthdate</p>";
+        echo "<p>$name's age is $age</p>";
     }
 ?>
 
@@ -58,13 +68,14 @@
     $birthdate = getParameters('birthdate');
 
     // For display only
-    echo '<p> Assignment Get Parameters From URL </p>';
+    echo "<h1>Assignment Get Parameters From URL </h1>";
+
     // If both values are set
     if (!empty($name) && !empty($birthdate)) {
         echo "<p>Name: $name Birthdate: $birthdate</p>";
     }
     else {
-        echo "<p> Not all parameters are set. </p>";
+        echo "<p>Not all parameters are set.</p>";
     }
 ?>
 
