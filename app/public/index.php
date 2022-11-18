@@ -30,7 +30,7 @@
                 $age = $age->format('%y');
             }
             catch (Exception $e) {
-                return null;
+                echo "<p>Date couldn't be converted</p>";
             }
         }
 
