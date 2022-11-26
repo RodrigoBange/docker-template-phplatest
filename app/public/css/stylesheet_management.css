@@ -1,0 +1,21 @@
+body { max-width: max-content; margin: auto; background-color: #abbfff; }
+
+h1 {color: white;}
+
+table {
+    background-color: #4949ba;
+    border: 2px solid #151515;
+    border-radius: 5px;
+    border-collapse: collapse;
+}
+
+table tr {
+    background-color: #d3d7ff;
+    border-bottom: 1px solid #4949ba;
+}
+
+table th { background-color: #4949ba; color: white; padding: 2px;}
+
+table td { min-width: 25px; padding: 5px; border-right: 1px solid #4949ba;}
+
+table td:nth-child(4) { max-width: 500px;}
