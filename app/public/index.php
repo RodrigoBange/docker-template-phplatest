@@ -14,6 +14,7 @@
         <textarea name="message" id="message"></textarea><br>
         <input type="submit" value="Send message" name="SubmitButton">
     </form>
+
 <?php
 require_once("dbconfig.php");
 
@@ -22,50 +23,8 @@ try {
     $connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connection successful.";
-    displayMessages($connection);
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
-}
-
-function displayMessages($connection)
-{
-    // Get all messages from database
-    try {
-        $query = "SELECT * FROM posts";
-        $result = $connection->query($query);
-
-        // Display all messages
-        foreach ($result as $row) {
-            echo "<div id='messagebox'>";
-            echo "<p class='name'>" .$row['name'] ."</p>";
-            echo nl2br("<p class='message'>" .$row['message'] ."</p>");
-            echo "<p class='date'>" .$row['posted_at'] ."</p>";
-            echo "</div>";
-        }
-    } catch (PDOException $e) {
-        echo "Couldn't retrieve messages.";
-    }
-}
-
-function displayNewestMessage($connection)
-{
-    // Get the newest message from the database
-    try {
-        $query = "SELECT * FROM `posts` ORDER BY id DESC LIMIT 1;";
-        // Returns array of objects, but we only need one, so grab the single row
-        $result = $connection->query($query);
-        $row = $result->fetch(PDO::FETCH_ASSOC);
-
-        // Display the new message
-        echo "<div id='messagebox'>";
-        echo "<p class='name'>" .$row['name'] ."</p>";
-        echo nl2br("<p class='message'>" .$row['message'] ."</p>");
-        echo "<p class='date'>" .$row['posted_at'] ."</p>";
-        echo "</div>";
-
-    } catch (PDOException $e) {
-        echo "Couldn't retrieve the newest message.";
-    }
 }
 
 if (isset($_POST['SubmitButton'])) {
@@ -99,11 +58,36 @@ if (isset($_POST['SubmitButton'])) {
             $query->execute();
 
             // Refresh messages
-            displayNewestMessage($connection);
+            //displayNewestMessage($connection);
         } catch (Exception $e) {
             echo "Failed to post message" . $e->getMessage();
         }
     }
+}
+
+function displayMessages($connection)
+{
+    // Get all messages from database
+    try {
+        $query = "SELECT * FROM posts";
+        $result = $connection->query($query);
+
+        // Display all messages
+        foreach ($result as $row) {
+            echo "<div id='messagebox'>";
+            echo "<p class='name'>" .$row['name'] ."</p>";
+            echo nl2br("<p class='message'>" .$row['message'] ."</p>");
+            echo "<p class='date'>" .$row['posted_at'] ."</p>";
+            echo "</div>";
+        }
+    } catch (PDOException $e) {
+        echo "Couldn't retrieve messages.";
+    }
+}
+
+// If a connection is made, display all the messages
+if ($connection) {
+    displayMessages($connection);
 }
 ?>
 </body>

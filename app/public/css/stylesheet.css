@@ -1,7 +1,13 @@
+body {max-width: max-content; margin: auto; background-color: #abbfff;}
+
+h1 { color: white;}
+
+form {background-color: #abbfff;}
+
 #messagebox {
     max-width: 500px;
     min-width: 500px;
-    background-color: #e3e3e3;
+    background-color: #d3d7ff;
     border: 2px solid #151515;
     border-radius: 5px;
     margin-bottom: 15px;
