@@ -3,19 +3,98 @@ body { max-width: max-content; margin: auto; background-color: #abbfff; }
 h1 {color: white;}
 
 table {
-    background-color: #4949ba;
-    border: 2px solid #151515;
-    border-radius: 5px;
+    background-color: #362F4B;
+    border: 2px solid #362F4B;
     border-collapse: collapse;
+    width: 1250px;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+table th {
+    background-color: #362F4B;
+    color: white;
+    padding: 2px;
+    text-align: left;
 }
 
 table tr {
-    background-color: #d3d7ff;
-    border-bottom: 1px solid #4949ba;
+    background-color: white;
+    border-bottom: 12px solid transparent;
+    border-top: 5px solid transparent;
 }
 
-table th { background-color: #4949ba; color: white; padding: 2px;}
+table tr:nth-child(odd) {
+    background-color: #F6F6F6;
+}
 
-table td { min-width: 25px; padding: 5px; border-right: 1px solid #4949ba;}
+table tr:hover, tr:nth-child(odd):hover{
+    font-weight: bold;
+    background-color: #ccd8ff;
+}
+
+table td {
+    min-width: 25px;
+    max-width: 100px;
+    padding: 5px;
+}
 
 table td:nth-child(4) { max-width: 500px;}
+
+.btn-edit {
+    width: 80px;
+    height: 35px;
+    border: 1px solid #013a62;
+    border-radius: 5px;
+    background-color: #0095ff;
+    color: white;
+    text-transform: uppercase;
+}
+
+.btn-delete {
+    width: 80px;
+    height: 35px;
+    border: 1px solid #800000;
+    border-radius: 5px;
+    background-color: #e60000;
+    color: white;
+    text-transform: uppercase;
+}
+
+#postform {
+    border-radius: 5px;
+    border: 2px solid #151515;
+    width: 500px;
+    padding: 10px;
+}
+
+#postform p { font-weight: bold; font-size: 1.2em; margin: 5px 0 10px 0;}
+
+#postform label { font-weight: bold; }
+
+#postform input[type=text] { margin: 0 0 10px 0;}
+
+#postform textarea {
+    width: 450px;
+    min-width: 150px;
+    max-width: 495px;
+    height: 150px;
+    min-height: 100px;
+    max-height: 500px;
+    margin: 0 0 10px 0;
+}
+
+#postform input[type=submit] {
+    padding: 10px;
+    border-radius: 5px;
+    border-style: none;
+    background-color: #5f5fff;
+    color: white;
+}
+
+#postform input[type=submit]:hover { background-color: #4949ba
+}
+
+.message_success { color: green;}
+
+.message_failure { color: red;}

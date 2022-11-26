@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Assignment 03</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <link rel="stylesheet" href="css/stylesheet_management.css">
+    <title>Assignment 03</title>
 </head>
 <body>
 <h1>Post Management</h1>
@@ -14,9 +17,10 @@ require_once("dbconfig.php");
 try {
     $connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connection successful.";
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    ?>
+    <p>Connection failed: <?php echo $e->getMessage(); ?></p>
+    <?php
 }
 
 function displayMessages($connection)
@@ -28,36 +32,69 @@ function displayMessages($connection)
 
         // Display all messages
         foreach ($result as $row) {
-            echo "<tr>";
-            echo "<td>" .$row['id'] ."</td>";
-            echo "<td>" .$row['name'] ."</td>";
-            echo "<td>" .$row['email'] ."</td>";
-            echo "<td>" .$row['message'] ."</td>";
-            echo "<td>" .$row['posted_at'] ."</td>";
-            echo "<td>" .$row['ip_address'] ."</td>";
-            echo "<td><button>Edit</button></td>";
-            echo "<td><button>Delete</button></td>";
-            echo "</tr>";
+            $id = $row['id'];
+            ?>
+            <tr>
+                <td><?php echo $row['id']; ?> </td>
+                <td><?php echo$row['name']; ?> </td>
+                <td><?php echo $row['email']; ?> </td>
+                <td><?php echo $row['message']; ?> </td>
+                <td><?php echo $row['posted_at']; ?> </td>
+                <td><?php echo $row['ip_address']; ?> </td>
+                <td><a href="updatemessage.php?id=<?php echo $id ?>">EDIT</a></td>
+                <td>
+                    <a href="management.php?deleteId=<?php echo $id ?>"
+                       onclick="return confirm('Are you sure you want to delete the post?')">
+                        DELETE
+                    </a>
+                </td>
+            </tr>
+            <?php
         }
     } catch (PDOException $e) {
-        echo "Couldn't retrieve messages.";
+        ?>
+        <p class="message_failure">Could not retrieve the posts. <?php echo $e->getMessage(); ?></p>
+        <?php
+    }
+}
+
+if (isset($_GET['deleteId'])) {
+    // Filter
+    $id = htmlspecialchars($_GET['deleteId']);
+
+    // Delete post from database
+    try {
+        $statement = $connection->prepare("DELETE FROM posts WHERE id=:id");
+        $statement->bindParam(':id', $id);
+        $statement->execute();
+
+        ?>
+        <p class="message_success">Successfully deleted post.</p>
+        <?php
+    } catch (Exception $e) {
+        ?>
+        <p class="message_failure">An error occurred deleting the post. <?php echo $e->getMessage(); ?></p>
+        <?php
     }
 }
 
 // If connection succeeds, display all messages
 if ($connection) {
-    // Set up table
-    echo "<table>";
-    echo "<tr>";
-    echo "<th>Id</th>";
-    echo "<th>Name</th>";
-    echo "<th>Email</th>";
-    echo "<th>Message</th>";
-    echo "<th>Posted At</th>";
-    echo "<th>IP Address</th>";
-    echo "</tr>";
-    displayMessages($connection);
-    echo "</table>";
+    ?>
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Message</th>
+            <th>Posted At</th>
+            <th>Ip Address</th>
+        </tr>
+        <?php
+        displayMessages($connection);
+        ?>
+    </table>
+    <?php
 }
 ?>
 </body>

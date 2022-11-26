@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Assignment 02</title>
+    <title>Assignment 03</title>
     <link rel="stylesheet" href="css/stylesheet.css">
 </head>
 <body>
@@ -22,9 +22,10 @@ require_once("dbconfig.php");
 try {
     $connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connection successful.";
 } catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+    ?>
+    <p>Connection failed: <?php echo $e->getMessage(); ?></p>
+    <?php
 }
 
 if (isset($_POST['SubmitButton'])) {
@@ -74,14 +75,18 @@ function displayMessages($connection)
 
         // Display all messages
         foreach ($result as $row) {
-            echo "<div id='messagebox'>";
-            echo "<p class='name'>" .$row['name'] ."</p>";
-            echo nl2br("<p class='message'>" .$row['message'] ."</p>");
-            echo "<p class='date'>" .$row['posted_at'] ."</p>";
-            echo "</div>";
+            ?>
+            <div id="messagebox">
+                <p class="name"><?php echo $row['name']; ?></p>
+                <p class="message"><?php echo nl2br($row['message']); ?></p>
+                <p class="date"><?php echo $row['posted_at']; ?></p>
+            </div>
+            <?php
         }
     } catch (PDOException $e) {
-        echo "Couldn't retrieve messages.";
+        ?>
+        <p class="message_failure">Couldn't retrieve messages.</p>
+        <?php
     }
 }
 
