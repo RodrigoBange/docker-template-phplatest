@@ -1,93 +1,110 @@
-<!HTML DOCTYPE>
+<!DOCTYPE html>
 <html lang="en">
-    <body>
-    <h1>Assignment Get Parameters From Form</h1>
-    <form action="index.php" method="post">
-        <label for="firstname">Name: </label><br>
-        <input type="text" id="firstname" name="firstname" value="Rodrigo"><br>
-        <label for="birthdate">Birthdate: </label><br>
-        <input type="date" id="birthdate" name="birthdate" value="1999-01-19"><br>
-        <input type="submit" value="Submit" name="SubmitButton">
+<head>
+    <title>Assignment 02</title>
+    <link rel="stylesheet" href="css/stylesheet.css">
+</head>
+<body>
+    <h1>Guestbook</h1>
+    <form action="index.php" method="post" id="messageform">
+        <p>Post a message:</p>
+        <label for="name">Name: </label><br>
+        <input type="text" id="name" name="name" value=""><br>
+        <label for="message">Message: </label><br>
+        <textarea name="message" id="message"></textarea><br>
+        <input type="submit" value="Send message" name="SubmitButton">
     </form>
+<?php
+require_once("dbconfig.php");
+
+// Set up connection and retrieve messages
+try {
+    $connection = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
+    $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connection successful.";
+    displayMessages($connection);
+} catch (PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+
+function displayMessages($connection)
+{
+    // Get all messages from database
+    try {
+        $query = "SELECT * FROM posts";
+        $result = $connection->query($query);
+
+        // Display all messages
+        foreach ($result as $row) {
+            echo "<div id='messagebox'>";
+            echo "<p class='name'>" .$row['name'] ."</p>";
+            echo nl2br("<p class='message'>" .$row['message'] ."</p>");
+            echo "<p class='date'>" .$row['posted_at'] ."</p>";
+            echo "</div>";
+        }
+    } catch (PDOException $e) {
+        echo "Couldn't retrieve messages.";
+    }
+}
+
+function displayNewestMessage($connection)
+{
+    // Get the newest message from the database
+    try {
+        $query = "SELECT * FROM `posts` ORDER BY id DESC LIMIT 1;";
+        // Returns array of objects, but we only need one, so grab the single row
+        $result = $connection->query($query);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
+
+        // Display the new message
+        echo "<div id='messagebox'>";
+        echo "<p class='name'>" .$row['name'] ."</p>";
+        echo nl2br("<p class='message'>" .$row['message'] ."</p>");
+        echo "<p class='date'>" .$row['posted_at'] ."</p>";
+        echo "</div>";
+
+    } catch (PDOException $e) {
+        echo "Couldn't retrieve the newest message.";
+    }
+}
+
+if (isset($_POST['SubmitButton'])) {
+    // Filter POST input (1st method of filtering)
+    //$_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_STRING);
+    //$name = $_POST['name'];
+    //$message = $_POST['message'];
+
+    // If values have been entered
+    if ($_POST['name'] != null && $_POST['message'] != null) {
+        // (Second method of filtering)
+        $name = htmlspecialchars($_POST['name']);
+        $message = htmlspecialchars($_POST['message']);
+
+        try {
+            // Set up query
+            $query = $connection->prepare("INSERT INTO posts
+                                        (name, message, posted_at, ip_address)
+                                        VALUES
+                                        (:name, :message, now(), :ip_address)");
+
+            // Bind values to parameters
+            $query->bindParam(':name', $name);
+            $query->bindParam('message', $message);
+            // Gets IP of current user, we're just going to blank that for now...
+            //$query->bindParam(':ip_address', $_SERVER['REMOTE_ADDR']);
+            $ipaddress = "0.0.0.0";
+            $query->bindParam(':ip_address', $ipaddress);
+
+            // Execute query
+            $query->execute();
+
+            // Refresh messages
+            displayNewestMessage($connection);
+        } catch (Exception $e) {
+            echo "Failed to post message" . $e->getMessage();
+        }
+    }
+}
+?>
 </body>
 </html>
-
-<?php
-    $name = null;
-    $birthdate = null;
-    $age = null;
-
-    if (isset($_POST['SubmitButton'])) {
-        if ($_POST['firstname'] !== null) {
-            $name = $_POST['firstname'];
-        }
-
-        if ($_POST['birthdate'] != null) {
-            try {
-                $birthdate = strtotime($_POST['birthdate']);
-                $birthdate = date('Y-m-d', $birthdate);
-                $age = date_diff(date_create($birthdate), date_create(date('Y-m-d')));
-                $age = $age->format('%y');
-            }
-            catch (Exception $e) {
-                echo "<p>Date couldn't be converted</p>";
-            }
-        }
-
-        // Display information
-        echo "<p>Name: $name Birthdate: $birthdate</p>";
-        echo "<p>$name's age is $age</p>";
-    }
-?>
-
-<?php
-    function getParameters($parameter) {
-        if ($parameter == 'name') {
-            // Check if both parameters exist
-            if (isset($_GET['name'])) {
-                return $_GET['name'];
-            }
-        }
-        else if ($parameter == 'birthdate') {
-            if (isset($_GET['birthdate'])) {
-                try {
-                    $birthdate = strtotime($_GET['birthdate']);
-                    return date('Y-m-d', $birthdate);
-                }
-                catch (Exception $e) {
-                    return null;
-                }
-
-            }
-        }
-        return null;
-    }
-
-    // Get values and convert string to date
-    $name = getParameters('name');
-    $birthdate = getParameters('birthdate');
-
-    // For display only
-    echo "<h1>Assignment Get Parameters From URL </h1>";
-
-    // If both values are set
-    if (!empty($name) && !empty($birthdate)) {
-        echo "<p>Name: $name Birthdate: $birthdate</p>";
-    }
-    else {
-        echo "<p>Not all parameters are set.</p>";
-    }
-?>
-
-<?php
-echo "Requested URL: " . $_SERVER['REQUEST_URI'];
-?>
-
-
-
-<?php
-    // The code below displays all errors (Forcing them to be specific)
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL);
-?>
