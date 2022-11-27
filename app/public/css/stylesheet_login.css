@@ -58,3 +58,38 @@ h1 {
 #loginForm input[type=submit]:hover {
     background: rgba(255, 255, 255, 0.59);
 }
+
+#userinfo {
+    position: fixed;
+    left: 10px;
+    top: -5px;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+
+#userinfo p {
+    font-size: 1.2em;
+}
+
+#userinfo a {
+    font-size: 0.9em;
+    height: 20px;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.29);
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    margin: 5px;
+    text-align: center;
+}
+
+#userinfo a:visited {
+    text-decoration: none;
+}
+
+#userinfo a:hover {
+    background: rgba(255, 255, 255, 0.59);
+}

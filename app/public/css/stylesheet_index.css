@@ -67,7 +67,7 @@ h1 {
 #messageForm textarea {
     width: 450px;
     min-width: 150px;
-    max-width: 500px;
+    max-width: 490px;
     height: 150px;
     min-height: 100px;
     max-height: 300px;
@@ -115,6 +115,22 @@ h1 {
     margin: 0;
 }
 
+.message_success {
+    color: white;
+    background: rgba(255, 255, 255, 0.29);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.message_failure {
+    color: white;
+    background: rgba(255, 21, 21, 0.29);
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 20px;
+}
+
 #userinfo {
     position: fixed;
     left: 10px;
@@ -122,6 +138,8 @@ h1 {
     margin: 0;
     padding: 0;
     text-align: left;
+    display: flex;
+    flex-direction: column;
 }
 
 #userinfo p {
@@ -130,12 +148,14 @@ h1 {
 
 #userinfo a {
     font-size: 0.9em;
-    height: 30px;
+    height: 20px;
     padding: 5px;
     background: rgba(255, 255, 255, 0.29);
     border-radius: 5px;
     text-decoration: none;
     color: white;
+    text-align: center;
+    margin: 5px;
 }
 
 #userinfo a:visited {

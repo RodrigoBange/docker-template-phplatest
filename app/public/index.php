@@ -3,7 +3,6 @@
     error_reporting(0);
     // Start session and open buffer
     session_start();
-    ob_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,13 +11,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <link rel="stylesheet" href="css/stylesheet_index.css">
-    <title>Assignment 03</title>
+    <title>Guestbook</title>
 </head>
 <body class="background">
-<div id="userinfo">
-    <p>Hello, <?php echo $_SESSION['username'] ?></p>
-    <a href="login.php?logout=1">Log out</a>
-</div>
+<?php
+if (isset($_SESSION['username'])) {
+    ?>
+    <div id="userinfo">
+        <p>Hello, <?php echo $_SESSION['username'] ?></p>
+        <?php
+        if (isset($_SESSION['usertype']) && $_SESSION['usertype'] == 1) {
+            ?>
+            <a href="management.php">Management</a>
+            <?php
+        }
+        ?>
+        <a href="index.php">Guestbook</a>
+        <a href="login.php?logout=1">Log out</a>
+    </div>
+<?php
+} else {
+    ?>
+    <div id="userinfo">
+        <p>Hello, guest</p>
+        <a href="login.php">Log in</a>
+    </div>
+<?php
+}
+?>
     <h1>Guestbook</h1>
     <form action="index.php" method="post" id="messageForm">
         <p>Post a message</p>
@@ -38,7 +58,7 @@ try {
     $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     ?>
-    <p>Connection failed: <?php echo $e->getMessage(); ?></p>
+    <p class="message_failure">Connection failed: <?php echo $e->getMessage(); ?></p>
     <?php
 }
 
@@ -64,7 +84,7 @@ if (isset($_POST['SubmitButton'])) {
             // Bind values to parameters
             $query->bindParam(':name', $name);
             $query->bindParam('message', $message);
-            // Gets IP of current user, we're just going to blank that for now...
+            // Gets IP of current user, we're just going to blank that out for now...
             //$query->bindParam(':ip_address', $_SERVER['REMOTE_ADDR']);
             $ipaddress = "0.0.0.0";
             $query->bindParam(':ip_address', $ipaddress);
@@ -72,10 +92,13 @@ if (isset($_POST['SubmitButton'])) {
             // Execute query
             $query->execute();
 
-            // Refresh messages
-            //displayNewestMessage($connection);
+            ?>
+                <p class="message_success">Message successfully posted!</p>
+            <?php
         } catch (Exception $e) {
-            echo "Failed to post message" . $e->getMessage();
+            ?>
+                <p class="message_failure">Failed to post message. <?php echo $e->getMessage();?></p>
+            <?php
         }
     }
 }
@@ -99,7 +122,7 @@ function displayMessages($connection)
         }
     } catch (PDOException $e) {
         ?>
-        <p class="message_failure">Couldn't retrieve messages.</p>
+        <p class="message_failure">Could not retrieve messages.</p>
         <?php
     }
 }

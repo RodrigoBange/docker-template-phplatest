@@ -1,4 +1,7 @@
 <?php
+    // Hide all errors for the user
+    error_reporting(0);
+
     session_start();
     // Check privileges
     if ($_SESSION['usertype'] != 1) {
@@ -15,7 +18,13 @@
     <link rel="stylesheet" href="css/stylesheet_management.css">
     <title>Assignment 03</title>
 </head>
-<body>
+<body class="background">
+<div id="userinfo">
+    <p>Hello, <?php echo $_SESSION['username'] ?></p>
+    <a href="management.php">Management</a>
+    <a href="index.php">Guestbook</a>
+    <a href="login.php?logout=1">Log out</a>
+</div>
 <h1>Post Management</h1>
 
 <?php
@@ -44,16 +53,17 @@ function displayMessages($connection)
             ?>
             <tr>
                 <td><?php echo $row['id']; ?> </td>
-                <td><?php echo$row['name']; ?> </td>
+                <td><?php echo $row['name']; ?> </td>
                 <td><?php echo $row['email']; ?> </td>
                 <td><?php echo $row['message']; ?> </td>
                 <td><?php echo $row['posted_at']; ?> </td>
                 <td><?php echo $row['ip_address']; ?> </td>
-                <td><a href="updatemessage.php?id=<?php echo $id ?>">EDIT</a></td>
+                <td><a href="updatemessage.php?id=<?php echo $id ?>" class="btn-edit">Edit</a></td>
                 <td>
                     <a href="management.php?deleteId=<?php echo $id ?>"
-                       onclick="return confirm('Are you sure you want to delete the post?')">
-                        DELETE
+                        onclick="return confirm('Are you sure you want to delete the post?')"
+                        class="btn-delete">
+                        Delete
                     </a>
                 </td>
             </tr>
@@ -89,6 +99,7 @@ if (isset($_GET['deleteId'])) {
 // If connection succeeds, display all messages
 if ($connection) {
     ?>
+    <div id="tableContainer">
     <table>
         <tr>
             <th>Id</th>
@@ -97,11 +108,14 @@ if ($connection) {
             <th>Message</th>
             <th>Posted At</th>
             <th>Ip Address</th>
+            <th></th>
+            <th></th>
         </tr>
         <?php
         displayMessages($connection);
         ?>
     </table>
+    </div>
     <?php
 }
 ?>

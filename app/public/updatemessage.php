@@ -1,4 +1,7 @@
 <?php
+    // Hide all errors for the user
+    error_reporting(0);
+
     session_start();
     // Check privileges
     if ($_SESSION['usertype'] != 1) {
@@ -13,9 +16,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <link rel="stylesheet" href="css/stylesheet_management.css">
-    <title>Assignment 03</title>
+    <title>Edit post</title>
 </head>
-<body>
+<body class="background">
+<div id="userinfo">
+    <p>Hello, <?php echo $_SESSION['username'] ?></p>
+    <a href="management.php">Management</a>
+    <a href="index.php">Guestbook</a>
+    <a href="login.php?logout=1">Log out</a>
+</div>
 <h1>Manage post</h1>
 
 <?php
@@ -53,15 +62,15 @@ if (isset($_GET['id'])) {
 
         if ($result != null) {
             ?>
-            <form method="post" id="postform">
-                <p>Edit message</p>
-                <label for="id">Poster Id: <?php echo $result['id']; ?></label><br>
-                <label for="name">Poster Name: <?php echo $result['name']; ?></label><br>
-                <label for="email">Poster Email: <?php echo $result['email']; ?></label><br>
-                <label for="ipaddress">Poster Ip Address: <?php echo $result['ip_address']; ?></label><br>
+            <form method="post" id="postForm">
+                <p>Poster Id: <?php echo $result['id']; ?></p>
+                <p>Poster Name: <?php echo $result['name']; ?></p>
+                <p>Poster Email: <?php echo $result['email']; ?></p>
+                <p>Poster Ip Address: <?php echo $result['ip_address']; ?></p>
                 <label for="message">Message: </label><br>
                 <textarea name="message" id="message" maxlength="255"><?php echo $result['message']; ?></textarea><br>
                 <input type="submit" value="Edit Message" name="EditButton">
+                <a href="management.php">Return to management</a>
             </form>
             <?php
         } else {
@@ -91,6 +100,11 @@ if (isset($_GET['id'])) {
                 <?php
             }
         }
+        else {
+            ?>
+            <p class="message_failure">Message can not be empty.</p>
+            <?php
+        }
     }
 
     // If a connection is made, create the form
@@ -99,6 +113,5 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
-<a href="management.php">Return</a>
 </body>
 </html>

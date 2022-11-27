@@ -6,10 +6,10 @@
     ob_start();
 
     if (isset($_GET['logout']) && $_GET['logout'] == 1) {
-        // Remove all set variables
+        // Remove all set variables (Keeps the session)
         session_unset();
 
-        // Destroy the session
+        // Destroy the session (Deletes all data)
         session_destroy();
     }
 
@@ -39,6 +39,10 @@
     <input type="password" id="password" name="password" maxlength="255"><br>
     <input type="submit" value="Log in" name="LoginButton">
 </form>
+<div id="userinfo">
+    <p>Visiting?</p>
+    <a href="index.php">Guestbook</a>
+</div>
 <?php
     require_once("dbconfig.php");
 
