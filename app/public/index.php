@@ -1,17 +1,31 @@
+<?php
+    // Hide all errors for the user
+    error_reporting(0);
+    // Start session and open buffer
+    session_start();
+    ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <link rel="stylesheet" href="css/stylesheet_index.css">
     <title>Assignment 03</title>
-    <link rel="stylesheet" href="css/stylesheet.css">
 </head>
-<body>
+<body class="background">
+<div id="userinfo">
+    <p>Hello, <?php echo $_SESSION['username'] ?></p>
+    <a href="login.php?logout=1">Log out</a>
+</div>
     <h1>Guestbook</h1>
-    <form action="index.php" method="post" id="messageform">
-        <p>Post a message:</p>
+    <form action="index.php" method="post" id="messageForm">
+        <p>Post a message</p>
         <label for="name">Name: </label><br>
-        <input type="text" id="name" name="name" value=""><br>
+        <input type="text" id="name" name="name" value="" maxlength="64"><br>
         <label for="message">Message: </label><br>
-        <textarea name="message" id="message"></textarea><br>
+        <textarea name="message" id="message" maxlength="255"></textarea><br>
         <input type="submit" value="Send message" name="SubmitButton">
     </form>
 

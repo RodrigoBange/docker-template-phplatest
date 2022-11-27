@@ -1,8 +1,19 @@
+<?php
+    session_start();
+    // Check privileges
+    if ($_SESSION['usertype'] != 1) {
+        echo "You are not privileged to enter this page.";
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Assignment 03</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <link rel="stylesheet" href="css/stylesheet_management.css">
+    <title>Assignment 03</title>
 </head>
 <body>
 <h1>Manage post</h1>
@@ -49,7 +60,7 @@ if (isset($_GET['id'])) {
                 <label for="email">Poster Email: <?php echo $result['email']; ?></label><br>
                 <label for="ipaddress">Poster Ip Address: <?php echo $result['ip_address']; ?></label><br>
                 <label for="message">Message: </label><br>
-                <textarea name="message" id="message"><?php echo $result['message']; ?></textarea><br>
+                <textarea name="message" id="message" maxlength="255"><?php echo $result['message']; ?></textarea><br>
                 <input type="submit" value="Edit Message" name="EditButton">
             </form>
             <?php

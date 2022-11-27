@@ -1,3 +1,11 @@
+<?php
+    session_start();
+    // Check privileges
+    if ($_SESSION['usertype'] != 1) {
+        echo "You are not privileged to enter this page.";
+        exit();
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
